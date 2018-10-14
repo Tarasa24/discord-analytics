@@ -6,15 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <title>My Chart.js Chart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Discord Analytics</title>
 </head>
-<body style="background-color:#232b2b;">
+<body style="background-color:#232b2b;">  
   <div class="container">
     <canvas id="myChart"></canvas>
     <canvas id="myChart2"></canvas>
     <canvas id="myChart3"></canvas>
   </div>
-
+  <div align="center" style="padding-top: 50px; padding-bottom: 5px">
+    <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"><button style="font-size:24px" class="btn btn-primary">Github <i class="fa fa-github"></i></button></a>
+  </div>
+  <div align="center">
+    <b style="color: gray">Tarasa24</b>
+  </div>
+  
   <script>
     function loadFile(filePath) {
       var result = null;
@@ -33,9 +40,6 @@
 
     var discord_scrape_historical = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape-historical.json");
     var discord_data_historic = JSON.parse(discord_scrape_historical);
-
-    //var discord_data_historic = {"2018-11-10": 2471, "2018-12-10": 2598, "2018-13-10": 2643, "2018-14-10": 2897}
-    //var discord_data = {"messages_per_user": {"Michelle26": 71, "Tarasa24": 929, "butter": 1406, "Rizkozrout": 9, "pekis02": 208, "Dank Memer": 17, "Groovy": 1}, "messages_per_channel": {"general": 793, "meme": 224, "deprese": 400, "optimismus": 10, "lenny-face": 37, "no-judge-zone": 33, "private": 700, "jukebox": 700}}
 
     var messages_per_user = [];    
     for(var x in discord_data.messages_per_user){
@@ -191,7 +195,7 @@
       options:{
         title:{
           display:true,
-          text:'Total number of messages',
+          text:'Total number of Messages',
           fontSize:25
         },
         legend:{
