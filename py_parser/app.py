@@ -10,7 +10,7 @@ with open('dht.txt', encoding="utf8") as f:
 nicknameDict = {}
 for ID in data["meta"]["users"].keys():
     nickname = data["meta"]["users"][ID]["name"]
-    nicknameDict.update({ID: nickname})     
+    nicknameDict.update({ID: nickname})
 
 # {'497110103225401344': 'general'}
 channelsDict = {}
@@ -20,7 +20,7 @@ for channelID in data["meta"]["channels"].keys():
 
 # {'Tarasa24': 1}
 userindexDict = {}
-for i in range(len(data["meta"]["userindex"]) - 1):
+for i in range(len(data["meta"]["userindex"])):
 
     for ID in nicknameDict.keys():
         if data["meta"]["userindex"][i] == ID:
