@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.5">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <title>My Chart.js Chart</title>
+</head>
+<body style="background-color:#232b2b;">
+  <div class="container">
+    <canvas id="myChart"></canvas>
+    <canvas id="myChart2"></canvas>
+    <canvas id="myChart3"></canvas>
+  </div>
+
+  <script>
+    function loadFile(filePath) {
+      var result = null;
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", filePath, false);
+      xmlhttp.send();
+      if (xmlhttp.status==200) {
+        result = xmlhttp.responseText;
+      }
+      return result;
+    }
+    let myChart = document.getElementById('myChart').getContext('2d');
+
+    var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape.json");
+    var discord_data = JSON.parse(discord_scrape);
+
+    var discord_scrape_historical = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape-historical.json");
+    var discord_data_historic = JSON.parse(discord_scrape_historical);
+
+    //var discord_data_historic = {"2018-11-10": 2471, "2018-12-10": 2598, "2018-13-10": 2643, "2018-14-10": 2897}
+    //var discord_data = {"messages_per_user": {"Michelle26": 71, "Tarasa24": 929, "butter": 1406, "Rizkozrout": 9, "pekis02": 208, "Dank Memer": 17, "Groovy": 1}, "messages_per_channel": {"general": 793, "meme": 224, "deprese": 400, "optimismus": 10, "lenny-face": 37, "no-judge-zone": 33, "private": 700, "jukebox": 700}}
+
+    var messages_per_user = [];    
+    for(var x in discord_data.messages_per_user){
+      messages_per_user.push(discord_data.messages_per_user[x]);
+    };
+    var Names = Object.keys(discord_data.messages_per_user);
+
+    console.log(Names)
+    console.log(messages_per_user)
+
+    var messages_per_channel = [];    
+    for(var x in discord_data.messages_per_channel){
+      messages_per_channel.push(discord_data.messages_per_channel[x]);
+    };
+    var Channels = Object.keys(discord_data.messages_per_channel);
+
+    console.log(Channels)
+    console.log(messages_per_channel)
+
+    var total_number_of_messages = [];    
+    for(var x in discord_data_historic){
+      total_number_of_messages.push(discord_data_historic[x]);
+    };
+    var Dates = Object.keys(discord_data_historic);
+
+    console.log(Dates)
+    console.log(total_number_of_messages)
+
+    // Global Options
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#ffffff';
+
+    // Messages per user chart
+    let messages_per_userCHART = new Chart(myChart, {
+      type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data:{
+        labels:Names,
+        datasets:[{
+          label:'Users',
+          data:messages_per_user,
+          //backgroundColor:'green',
+          backgroundColor:[
+            'rgba(140, 48, 9, 0.8)',
+            'rgba(242, 242, 0, 0.8)',
+            'rgba(70, 155, 77, 0.8)',
+            'rgba(193, 27, 99, 0.8)',
+            'rgba(76, 104, 118, 0.8)',
+            'rgba(255, 255, 255, 0.8)',
+            'rgba(98, 252, 86, 0.8)',
+            'rgba(143, 112, 31 , 0.8)',
+
+          ],
+          borderWidth:1,
+          borderColor:'#777',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#ffffff'
+        }]
+      },
+      options:{
+        title:{
+          display:true,
+          text:'Message per user',
+          fontSize:25
+        },
+        legend:{
+          display:true,
+          position:'right',
+          labels:{
+            fontColor:'#ffffff'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+    //Messages per channel chart
+    let messages_per_channelCHART = new Chart(myChart2, {
+      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data:{
+        labels:Channels,
+        datasets:[{
+          label:'Channels',
+          data:messages_per_channel,
+          //backgroundColor:'green',
+          backgroundColor:[
+            'rgba(242, 242, 0, 0.8)',
+            'rgba(140, 48, 9, 0.8)',
+            'rgba(193, 27, 99, 0.8)',
+            'rgba(70, 155, 77, 0.8)',
+            'rgba(76, 104, 118, 0.8)',
+            'rgba(255, 255, 255, 0.8)',
+            'rgba(98, 252, 86, 0.8)',
+            'rgba(143, 112, 31 , 0.8)',
+          ],
+          borderWidth:1,
+          borderColor:'#777',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#ffffff'
+        }]
+      },
+      options:{
+        title:{
+          display:true,
+          text:'Message per Channel',
+          fontSize:25
+        },
+        legend:{
+          display:false,
+          position:'right',
+          labels:{
+            fontColor:'#ffffff'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+    let historicCHART = new Chart(myChart3, {
+      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data:{
+        labels:Dates,
+        datasets:[{
+          label:'Dates',
+          data:total_number_of_messages,
+          backgroundColor:'green',    
+          borderWidth:1,
+          borderColor:'#777',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#ffffff'
+        }]
+      },
+      options:{
+        title:{
+          display:true,
+          text:'Total number of messages',
+          fontSize:25
+        },
+        legend:{
+          display:false,
+          position:'right',
+          labels:{
+            fontColor:'#ffffff'
+          }
+        },
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+  </script>
+</body>
+</html>
