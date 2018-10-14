@@ -73,6 +73,10 @@
     Chart.defaults.global.defaultFontSize = 18;
     Chart.defaults.global.defaultFontColor = '#ffffff';
 
+    function random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + 0.8 + ')';
+    }
     // Messages per user chart
     let messages_per_userCHART = new Chart(myChart, {
       type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
@@ -83,15 +87,17 @@
           data:messages_per_user,
           //backgroundColor:'green',
           backgroundColor:[
-            'rgba(140, 48, 9, 0.8)',
-            'rgba(242, 242, 0, 0.8)',
-            'rgba(70, 155, 77, 0.8)',
-            'rgba(193, 27, 99, 0.8)',
-            'rgba(76, 104, 118, 0.8)',
-            'rgba(255, 255, 255, 0.8)',
-            'rgba(98, 252, 86, 0.8)',
-            'rgba(143, 112, 31 , 0.8)',
-
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba()
           ],
           borderWidth:1,
           borderColor:'#777',
@@ -136,14 +142,17 @@
           data:messages_per_channel,
           //backgroundColor:'green',
           backgroundColor:[
-            'rgba(242, 242, 0, 0.8)',
-            'rgba(140, 48, 9, 0.8)',
-            'rgba(193, 27, 99, 0.8)',
-            'rgba(70, 155, 77, 0.8)',
-            'rgba(76, 104, 118, 0.8)',
-            'rgba(255, 255, 255, 0.8)',
-            'rgba(98, 252, 86, 0.8)',
-            'rgba(143, 112, 31 , 0.8)',
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba(),
+            random_rgba()
           ],
           borderWidth:1,
           borderColor:'#777',
