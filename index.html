@@ -2,24 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=0.5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
   <title>Discord Analytics</title>
 </head>
-<body style="background-color:#232b2b;">  
+<body style="background-color:#232b2b;">
+
+<div class="container" align="center" style="padding-top: 20px">
+  <h2 style="color: white">Discord Analytics</h2>
+  <p style="color: white">For all of yours data-fetish needs...</p>            
+  <table class="table table-dark" style="width: 50%" id="table">
+      
+  </table>
+</div>
+
+
+
   <div class="container">
     <canvas id="myChart"></canvas>
     <canvas id="myChart2"></canvas>
     <canvas id="myChart3"></canvas>
+    <canvas id="myChart4"></canvas>
   </div>
   <div align="center" style="padding-top: 50px; padding-bottom: 5px">
-    <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"><button style="font-size:24px" class="btn btn-primary">Github <i class="fa fa-github"></i></button></a>
+    <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"><button style="font-size:24px; margin-right: 5px" class="btn btn-primary">Github <i class="fa fa-github"></i></button></a>
+
+    <a href="https://www.reddit.com/r/discordapp/comments/7pk88f/an_analysis_of_760000_messages_from_the/" target="_blank"><button style="font-size:24px; background-color: #FF5700; margin-right: 5px" class="btn btn-danger">Reddit <i class="fa fa-reddit"></i></button></a>
+
+    <a href="https://www.reddit.com/r/discordapp/comments/7pk88f/an_analysis_of_760000_messages_from_the/" target="_blank"><button style="font-size:24px; background-color: gray; color: white; margin-right: 5px" class="btn">Discord History Tracker <i class="fa fa-external-link-square"></i></button></a>
   </div>
   <div align="center">
-    <b style="color: gray">Tarasa24</b>
+    <b style="color: gray">Tarasa24 <i>2018</i></b>
   </div>
   
   <script>
@@ -33,40 +49,59 @@
       }
       return result;
     }
-    let myChart = document.getElementById('myChart').getContext('2d');
-
+    
     var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape.json");
     var discord_data = JSON.parse(discord_scrape);
 
-    var discord_scrape_historical = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape-historical.json");
-    var discord_data_historic = JSON.parse(discord_scrape_historical);
+
+    var table = document.getElementById("table")
+    var server_name = discord_data.head.server_name
+    var number_of_messages = discord_data.head.number_of_messages
+    var number_of_users = discord_data.head.number_of_users
+    var number_of_channels = discord_data.head.number_of_channels
+    var first_message = discord_data.head.first_message
+    var last_update = discord_data.head.last_update
+    table.innerHTML = "<tr><th>Server name</th><td><i>" + server_name + "</i></td></tr> <tr><th>Number of messages</th><td><i>" + number_of_messages + "</i></td></tr> <tr><th>Number of users</th><td><i>" + number_of_users + "</i></td></tr><tr><th>Number of channels</th><td><i>" + number_of_channels + "</i></td></tr><tr><th>First message</th><td><i>" + first_message + "</i></td></tr><tr><th>Last update</th><td>" + last_update + "</td></tr>"
 
     var messages_per_user = [];    
-    for(var x in discord_data.messages_per_user){
-      messages_per_user.push(discord_data.messages_per_user[x]);
+    for(var x in discord_data.data.messages_per_user){
+      messages_per_user.push(discord_data.data.messages_per_user[x]);
     };
-    var Names = Object.keys(discord_data.messages_per_user);
+    var Names = Object.keys(discord_data.data.messages_per_user);
 
     console.log(Names)
     console.log(messages_per_user)
 
+
     var messages_per_channel = [];    
-    for(var x in discord_data.messages_per_channel){
-      messages_per_channel.push(discord_data.messages_per_channel[x]);
+    for(var x in discord_data.data.messages_per_channel){
+      messages_per_channel.push(discord_data.data.messages_per_channel[x]);
     };
-    var Channels = Object.keys(discord_data.messages_per_channel);
+    var Channels = Object.keys(discord_data.data.messages_per_channel);
 
     console.log(Channels)
     console.log(messages_per_channel)
 
-    var total_number_of_messages = [];    
-    for(var x in discord_data_historic){
-      total_number_of_messages.push(discord_data_historic[x]);
-    };
-    var Dates = Object.keys(discord_data_historic);
+
+    var messages_freq = [];    
+      for(var x in discord_data.data.word_frequency){
+        messages_freq.push(discord_data.data.word_frequency[x]);
+      };
+    var Words = Object.keys(discord_data.data.word_frequency);
+
+    console.log(Words)
+    console.log(messages_freq)
+
+
+    var number_of_messages_per_day = [];    
+      for(var x in discord_data.data.historical_data){
+        number_of_messages_per_day.push(discord_data.data.historical_data[x]);
+      };
+    var Dates = Object.keys(discord_data.data.historical_data);
 
     console.log(Dates)
-    console.log(total_number_of_messages)
+    console.log(number_of_messages_per_day)
+
 
     // Global Options
     Chart.defaults.global.defaultFontFamily = 'Lato';
@@ -77,6 +112,15 @@
     var o = Math.round, r = Math.random, s = 255;
     return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + 0.8 + ')';
     }
+
+    function generate_color_list(list) {
+      var color_list = []
+      for (var i = 0; i < list.length; i++) {
+        color_list.push(random_rgba());
+      }
+      return color_list
+    }
+
     // Messages per user chart
     let messages_per_userCHART = new Chart(myChart, {
       type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
@@ -86,19 +130,7 @@
           label:'Users',
           data:messages_per_user,
           //backgroundColor:'green',
-          backgroundColor:[
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba()
-          ],
+          backgroundColor:generate_color_list(Names),
           borderWidth:1,
           borderColor:'#777',
           hoverBorderWidth:3,
@@ -108,7 +140,7 @@
       options:{
         title:{
           display:true,
-          text:'Message per user',
+          text:'Messages per user',
           fontSize:25
         },
         legend:{
@@ -120,10 +152,10 @@
         },
         layout:{
           padding:{
-            left:50,
+            left:0,
             right:0,
             bottom:0,
-            top:0
+            top:50
           }
         },
         tooltips:{
@@ -134,26 +166,14 @@
 
     //Messages per channel chart
     let messages_per_channelCHART = new Chart(myChart2, {
-      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      type:'horizontalBar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data:{
         labels:Channels,
         datasets:[{
-          label:'Channels',
+          label:'Number of messages',
           data:messages_per_channel,
           //backgroundColor:'green',
-          backgroundColor:[
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba(),
-            random_rgba()
-          ],
+          backgroundColor:generate_color_list(Channels),
           borderWidth:1,
           borderColor:'#777',
           hoverBorderWidth:3,
@@ -163,7 +183,7 @@
       options:{
         title:{
           display:true,
-          text:'Message per Channel',
+          text:'Messages per Channel',
           fontSize:25
         },
         legend:{
@@ -175,10 +195,10 @@
         },
         layout:{
           padding:{
-            left:50,
+            left:0,
             right:0,
             bottom:0,
-            top:0
+            top:50
           }
         },
         tooltips:{
@@ -192,8 +212,8 @@
       data:{
         labels:Dates,
         datasets:[{
-          label:'Dates',
-          data:total_number_of_messages,
+          label:'Number of messages',
+          data:number_of_messages_per_day,
           backgroundColor:'green',    
           borderWidth:1,
           borderColor:'#777',
@@ -204,7 +224,7 @@
       options:{
         title:{
           display:true,
-          text:'Total number of Messages',
+          text:'Messages per Day',
           fontSize:25
         },
         legend:{
@@ -216,10 +236,53 @@
         },
         layout:{
           padding:{
-            left:50,
+            left:0,
             right:0,
             bottom:0,
-            top:0
+            top:50
+          }
+        },
+        tooltips:{
+          enabled:true
+        }
+      }
+    });
+
+    //Word frequency
+    let message_freqCHART = new Chart(myChart4, {
+      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data:{
+        labels:Words,
+        datasets:[{
+          label:'',
+          data:messages_freq,
+          //backgroundColor:'green',
+          backgroundColor:generate_color_list(Words),
+          borderWidth:1,
+          borderColor:'#777',
+          hoverBorderWidth:3,
+          hoverBorderColor:'#ffffff'
+        }]
+      },
+      options:{
+        title:{
+          display:true,
+          text:'Word Frequency',
+          fontSize:25
+        },
+        legend:{
+          display:false,
+          position:'right',
+          labels:{
+            fontColor:'#ffffff'
+          }
+        },
+        layout:{
+          padding:{
+            left:0,
+            right:0,
+            bottom:0,
+            top:50
           }
         },
         tooltips:{
