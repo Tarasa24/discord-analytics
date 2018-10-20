@@ -2,29 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1024">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <title>Discord Analytics</title>
 </head>
 <body style="background-color:#232b2b;">
 
-<div class="container" align="center" style="padding-top: 20px">
-  <h2 style="color: white">Discord Analytics</h2>
-  <p style="color: white">For all of yours data-fetish needs...</p>            
-  <table class="table table-dark" style="width: 50%" id="table">
-      
-  </table>
+<div class="container" align="center" style="padding-top: 20px; padding-bottom: 10px">
+  <h2 style="color: white"><a href="https://tarasa24.github.io/discord-analytics/">Discord Analytics</a></h2>
+  <p style="color: white">For all of yours data-fetish needs...</p>
+
+<table class="table table-dark" style="width: 50%" align="center"><tr><td> 
+  <div class="form-group">
+    <label for="sel1">Select server:</label>
+    <select class="form-control" id="select" onchange="insertParam()">
+    </select>
+  </div>
+  </td></tr>
+</table>
+
+  <table class="table table-dark" style="width: 50%" id="table"></table>
+
 </div>
 
+<script>
+    function insertParam()
+    {
+    key = encodeURI("s"); value = encodeURI($( "#select option:selected" ).text());
+
+    var kvp = document.location.search.substr(1).split('&');
+
+    var i=kvp.length; var x; while(i--) 
+    {
+        x = kvp[i].split('=');
+
+        if (x[0]==key)
+        {
+            x[1] = value;
+            kvp[i] = x.join('=');
+            break;
+        }
+    }
+
+    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+    //this will reload the page, it's likely better to store this until finished
+    document.location.search = kvp.join('&'); 
+    }
+</script>
 
 
-  <div class="container">
+  <div class="container" align="center" style="color: white">
+    <h3>Messages per user</h3>
+    <i>first 50 users</i>
     <canvas id="myChart"></canvas>
+    <h3>Messages per Channel</h3>
+    <i>first 50 channels</i>
     <canvas id="myChart2"></canvas>
+    <h3>Messages per Day</h3>
     <canvas id="myChart3"></canvas>
+    <h3>Word Frequency</h3>
     <canvas id="myChart4"></canvas>
   </div>
   <div align="center" style="padding-top: 50px; padding-bottom: 5px">
@@ -49,10 +90,59 @@
       }
       return result;
     }
-    
+/*    
     var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape.json");
     var discord_data = JSON.parse(discord_scrape);
+*/
+    url = decodeURI(window.location)
+    index  = url.indexOf('s=')
+    SelectItem = url.substr(index + 2)
+    console.log(SelectItem)
 
+    var scrapeList = ["Crew Humorníků", 
+    "Hadí parta", 
+    "Tlupa Discord", 
+    "\ud83d\uddfd citymanlive"]
+    var select = document.getElementById("select")
+
+    if (index == -1){
+      for (var i = 0; i < scrapeList.length; i++) {
+        select.innerHTML += "<option>" + scrapeList[i] + "</option>"
+      }
+    }
+    else {
+      select.innerHTML = "<option>" + SelectItem + "</option>"
+      for (var i = 0; i < scrapeList.length; i++) {
+        if (SelectItem != scrapeList[i]) {
+          select.innerHTML += "<option>" + scrapeList[i] + "</option>"
+        }       
+      }
+    }
+    
+    if (url.indexOf("Hadí parta") > -1) {
+      var discord_data = var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Hadí-parta.json");
+      var discord_data = JSON.parse(discord_scrape);
+    } 
+    else if (url.indexOf("Crew Humorníků") > -1) {
+      var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Crew-Humorníků.json");
+      var discord_data = JSON.parse(discord_scrape);
+    }
+
+    else if (url.indexOf("Tlupa Discord") > -1){
+      var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Tlupa-Discord.json");
+      var discord_data = JSON.parse(discord_scrape);
+
+    else if (url.indexOf("\ud83d\uddfd citymanlive") > -1) {
+      var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_\ud83d\uddfd-citymanlive.json");
+      var discord_data = JSON.parse(discord_scrape);
+    }
+    else {
+      var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Crew-Humorníků.json");
+      var discord_data = JSON.parse(discord_scrape);
+    }
+
+
+    
 
     var table = document.getElementById("table")
     var server_name = discord_data.head.server_name
@@ -63,6 +153,7 @@
     var last_update = discord_data.head.last_update
     table.innerHTML = "<tr><th>Server name</th><td><i>" + server_name + "</i></td></tr> <tr><th>Number of messages</th><td><i>" + number_of_messages + "</i></td></tr> <tr><th>Number of users</th><td><i>" + number_of_users + "</i></td></tr><tr><th>Number of channels</th><td><i>" + number_of_channels + "</i></td></tr><tr><th>First message</th><td><i>" + first_message + "</i></td></tr><tr><th>Last update</th><td>" + last_update + "</td></tr>"
 
+
     var messages_per_user = [];    
     for(var x in discord_data.data.messages_per_user){
       messages_per_user.push(discord_data.data.messages_per_user[x]);
@@ -71,7 +162,6 @@
 
     console.log(Names)
     console.log(messages_per_user)
-
 
     var messages_per_channel = [];    
     for(var x in discord_data.data.messages_per_channel){
@@ -121,6 +211,13 @@
       return color_list
     }
 
+    function generate_one_color_list(list, color) {
+      var color_list = []
+      for (var i = 0; i < list.length; i++) {
+        color_list.push(color);
+      }
+      return color_list
+    }
     // Messages per user chart
     let messages_per_userCHART = new Chart(myChart, {
       type:'pie', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
@@ -139,12 +236,12 @@
       },
       options:{
         title:{
-          display:true,
+          display:false,
           text:'Messages per user',
           fontSize:25
         },
         legend:{
-          display:true,
+          display:false,
           position:'right',
           labels:{
             fontColor:'#ffffff'
@@ -154,7 +251,7 @@
           padding:{
             left:0,
             right:0,
-            bottom:0,
+            bottom:50,
             top:50
           }
         },
@@ -166,7 +263,7 @@
 
     //Messages per channel chart
     let messages_per_channelCHART = new Chart(myChart2, {
-      type:'horizontalBar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data:{
         labels:Channels,
         datasets:[{
@@ -182,12 +279,12 @@
       },
       options:{
         title:{
-          display:true,
+          display:false,
           text:'Messages per Channel',
           fontSize:25
         },
         legend:{
-          display:false,
+          display:true,
           position:'right',
           labels:{
             fontColor:'#ffffff'
@@ -208,14 +305,14 @@
     });
 
     let historicCHART = new Chart(myChart3, {
-      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data:{
         labels:Dates,
         datasets:[{
           label:'Number of messages',
           data:number_of_messages_per_day,
-          backgroundColor:'green',    
-          borderWidth:1,
+          backgroundColor:generate_one_color_list(Dates, "green"),    
+          borderWidth:0,
           borderColor:'#777',
           hoverBorderWidth:3,
           hoverBorderColor:'#ffffff'
@@ -223,7 +320,7 @@
       },
       options:{
         title:{
-          display:true,
+          display:false,
           text:'Messages per Day',
           fontSize:25
         },
@@ -266,7 +363,7 @@
       },
       options:{
         title:{
-          display:true,
+          display:false,
           text:'Word Frequency',
           fontSize:25
         },

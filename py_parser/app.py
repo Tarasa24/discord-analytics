@@ -1,6 +1,5 @@
 import json
 from pprint import pprint
-import json
 from datetime import datetime
 import re
 
@@ -53,8 +52,12 @@ def messages_per_user (userindexDict, channelsDict):
     
     for channelIndex in channelsDict.keys():
         messageList = []
-        for key in data["data"][channelIndex]:
-            messageList.append(key)
+        try:
+            for key in data["data"][channelIndex]:
+                messageList.append(key)
+        except Exception as e:
+            print(e)
+        
     
         for messageIndex in messageList:     
             for userID in userindexDict.keys():
@@ -62,7 +65,21 @@ def messages_per_user (userindexDict, channelsDict):
                     current_number = messagesPerUserDict.get(userID)
                     messagesPerUserDict.update({userID: current_number + 1})
 
-    return messagesPerUserDict
+
+    sorted_d = sorted(messagesPerUserDict.items(), key=lambda x: x[1])
+    sorted_d.reverse()
+
+    finalDict = {}
+    for x in range(0,49):
+        try:
+            key = sorted_d[x][0]
+            value = sorted_d[x][1]
+        except Exception as e:
+            print(e)
+        
+        finalDict.update({key: value})
+
+    return finalDict
 
 
 def messages_per_channel (channelsDict):
@@ -72,12 +89,29 @@ def messages_per_channel (channelsDict):
     for name in channelsDict.values():
         messagesPerChannelDict.update({name: 0})
     
-    for channelID in channelsDict.keys():
-        number_of_messages = len(data["data"][channelID])
-        name = channelsDict.get(channelID)
-        messagesPerChannelDict.update({name: number_of_messages})
 
-    return messagesPerChannelDict
+    for channelID in channelsDict.keys():
+        try:
+            number_of_messages = len(data["data"][channelID])
+            name = channelsDict.get(channelID)
+            messagesPerChannelDict.update({name: number_of_messages})
+        except Exception as e:
+            print(e)
+    
+    sorted_d = sorted(messagesPerChannelDict.items(), key=lambda x: x[1])
+    sorted_d.reverse()
+
+    finalDict = {}
+    for x in range(0,49):
+        try:
+            key = sorted_d[x][0]
+            value = sorted_d[x][1]
+        except Exception as e:
+            print(e)
+        
+        finalDict.update({key: value})
+
+    return finalDict
 
 
 def word_frequency (channelsDict):
@@ -87,22 +121,26 @@ def word_frequency (channelsDict):
     wordFreqDict = {}
     for channelIndex in channelsDict.keys():
         messageList = []
-        for key in data["data"][channelIndex]:
-            messageList.append(key)
+        try:
+            for key in data["data"][channelIndex]:
+                messageList.append(key)
     
-        for messageIndex in messageList:     
-            message = data["data"][channelIndex][messageIndex]["m"].lower()
-
-            wordList.extend(re.sub("[^\w]", " ",  message).split())
+            for messageIndex in messageList:     
+                message = data["data"][channelIndex][messageIndex]["m"].lower()
     
-    for word in wordList:
-        if len(word) >= 4:
-            if not word.isdigit():
-                if word in wordFreqDict:
-                    i = int(wordFreqDict.get(word)) + 1
-                    wordFreqDict.update({word: i})
-                else:
-                    wordFreqDict.update({word: 1})
+                wordList.extend(re.sub("[^\w]", " ",  message).split())
+    
+            for word in wordList:
+                if len(word) >= 4:
+                    if not word.isdigit():
+                        if word in wordFreqDict:
+                            i = int(wordFreqDict.get(word)) + 1
+                            wordFreqDict.update({word: i})
+                        else:
+                           wordFreqDict.update({word: 1})
+        except Exception as e:
+            print(e)
+        
     
     sorted_d = sorted(wordFreqDict.items(), key=lambda x: x[1])
     sorted_d.reverse()
@@ -112,7 +150,7 @@ def word_frequency (channelsDict):
         key = sorted_d[x][0]
         value = sorted_d[x][1]
 
-        finalDict.update({key: value})    
+        finalDict.update({key: value})
     
     return finalDict
 
@@ -124,8 +162,12 @@ def total_number_of_messages (channelsDict):
     
     for channelIndex in channelsDict.keys():
         messageList = []
-        for key in data["data"][channelIndex]:
-            total_number_of_messages_count += 1
+        try:
+            for key in data["data"][channelIndex]:
+                total_number_of_messages_count += 1
+        except Exception as e:
+            print(e)
+        
 
     return total_number_of_messages_count
 
@@ -134,8 +176,12 @@ def history(channelsDict):
     daysDict = {}  
     for channelIndex in channelsDict.keys():
         messageList = []
-        for key in data["data"][channelIndex]:
-            messageList.append(key)
+        try:
+            for key in data["data"][channelIndex]:
+                messageList.append(key)
+        except Exception as e:
+            print(e)
+        
 
         for messageIndex in messageList:     
             
@@ -166,7 +212,7 @@ def first_message(channelsDict):
 
 
 # json making
-with open("../data/discord-scrape.json", "w") as outfile:
+with open("../data/discord-scrape_" + server_name().replace(" ", "-") + ".json", "w") as outfile:
     finaljson = {"head": 
     {"server_name": server_name(),
     "number_of_messages": total_number_of_messages(channelsDict),
