@@ -128,14 +128,16 @@
       var discord_data = JSON.parse(discord_scrape);
     }
 
-    else if (url.indexOf("Tlupa Discord") > -1){
+    else if (url.indexOf("Tlupa Discord") > -1) {
       var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Tlupa-Discord.json");
       var discord_data = JSON.parse(discord_scrape);
+    }
 
     else if (url.indexOf("\ud83d\uddfd citymanlive") > -1) {
       var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_\ud83d\uddfd-citymanlive.json");
       var discord_data = JSON.parse(discord_scrape);
     }
+    
     else {
       var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Crew-Humorníků.json");
       var discord_data = JSON.parse(discord_scrape);
