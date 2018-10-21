@@ -1,6 +1,6 @@
 import json
 from pprint import pprint
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import re
 import sys
 from multiprocessing.pool import ThreadPool
@@ -26,14 +26,14 @@ for channelID in data["meta"]["channels"].keys():
     channel_name = data["meta"]["channels"][channelID]["name"]
     channelsDict.update({channelID: channel_name})
 
-# {'Tarasa24': 1}
+# {'1: Tarasa24'}
 userindexDict = {}
 for i in range(len(data["meta"]["userindex"])):
 
     for ID in nicknameDict.keys():
         if data["meta"]["userindex"][i] == ID:
             nick = nicknameDict.get(ID)
-            userindexDict.update({nick: i})
+            userindexDict.update({i: nick})
 
 
 def server_name ():
@@ -52,10 +52,7 @@ def number_of_channels(channelsDict):
 def messages_per_user (userindexDict, channelsDict):
     "{'Tarasa24': 896}"
 
-    messagesPerUserDict = {}
-    for name in userindexDict.keys():
-        messagesPerUserDict.update({name: 0})
-    
+    messagesPerUserDict = {}    
     for channelIndex in channelsDict.keys():
         messageList = []
         try:
@@ -64,12 +61,13 @@ def messages_per_user (userindexDict, channelsDict):
         except Exception as e:
             pass
                       
-    for messageIndex in messageList:     
-        for userID in userindexDict.keys():
-            if data["data"][channelIndex][messageIndex]["u"] == userindexDict.get(userID):
-                current_number = messagesPerUserDict.get(userID)
-                messagesPerUserDict.update({userID: current_number + 1})
-
+        for messageIndex in messageList:     
+            user = userindexDict.get(data["data"][channelIndex][messageIndex]["u"])
+            if user in messagesPerUserDict:
+                current_number = messagesPerUserDict.get(user)
+                messagesPerUserDict.update({user: current_number + 1})
+            else:
+                messagesPerUserDict.update({user: 0})
 
     sorted_d = sorted(messagesPerUserDict.items(), key=lambda x: x[1])
     sorted_d.reverse()
@@ -192,17 +190,19 @@ def history(channelsDict):
             else:
                 daysDict.update({time_formated: 1})
 
-    List = list(daysDict.keys())
-    start = datetime.strptime(List[0], "%Y-%m-%d")
-    end = datetime.strptime(List[-1], "%Y-%m-%d")
-    date_generated = [start + timedelta(days=x,) for x in range(0, (end-start).days)]
+    sorted_d = sorted(daysDict.items(), key=lambda x: x[0])
 
+    # Adding days with no messages
+    start = datetime.strptime(sorted_d[0][0], '%Y-%m-%d')
+    end = datetime.strptime(sorted_d[-1][0], '%Y-%m-%d')
+    date_generated = [start + timedelta(days=x) for x in range(0, (end-start).days)]
+    
     for date in date_generated:
         if date.strftime("%Y-%m-%d") not in daysDict:
             daysDict.update({date.strftime("%Y-%m-%d"): 0})
 
-
     sorted_d = sorted(daysDict.items(), key=lambda x: x[0])
+
     finalDict = {}
     for x in range(len(sorted_d)):
         key = sorted_d[x][0]

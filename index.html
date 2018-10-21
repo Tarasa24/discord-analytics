@@ -343,8 +343,6 @@ function generate_rainbow (size) {
       }
     });
 
-    var line_color = random_rgba(1)
-
     let historicCHART = new Chart(myChart3, {
       type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data:{
@@ -352,7 +350,7 @@ function generate_rainbow (size) {
         datasets:[{
           label:'Number of messages',
           data:number_of_messages_per_day,
-          backgroundColor: line_color,
+          backgroundColor: "white",
           borderWidth: 2,
           borderColor: "white",
           hoverBorderWidth: 1,
