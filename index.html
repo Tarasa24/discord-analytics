@@ -90,10 +90,43 @@
       }
       return result;
     }
-/*    
-    var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape.json");
-    var discord_data = JSON.parse(discord_scrape);
-*/
+
+
+function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.6)';
+    }
+    throw new Error('Bad Hex');
+}
+
+function sin_to_hex(i, phase, size) {
+  var sin = Math.sin(Math.PI / size * 2 * i + phase);
+  var int = Math.floor(sin * 127) + 128;
+  var hex = int.toString(16);
+
+  return hex.length === 1 ? "0"+hex : hex;
+}
+
+
+function generate_rainbow (size) {
+  var rainbow = new Array(size);
+
+  for (var i=0; i<size; i++) {
+    var red   = sin_to_hex(i, 0 * Math.PI * 2/3, size); // 0   deg
+    var blue  = sin_to_hex(i, 1 * Math.PI * 2/3, size); // 120 deg
+    var green = sin_to_hex(i, 2 * Math.PI * 2/3, size); // 240 deg
+
+    rainbow[i] = hexToRgbA("#"+ red + green + blue);
+  }
+
+  return rainbow
+}
     url = decodeURI(window.location)
     index  = url.indexOf('s=')
     SelectItem = url.substr(index + 2)
@@ -102,7 +135,8 @@
     var scrapeList = ["Crew Humorníků", 
     "Hadí parta", 
     "Tlupa Discord", 
-    "\ud83d\uddfd citymanlive"]
+    "\ud83d\uddfd citymanlive", 
+    "Chewwy's Departure Lounge"]
     var select = document.getElementById("select")
 
     if (index == -1){
@@ -137,7 +171,10 @@
       var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_\ud83d\uddfd-citymanlive.json");
       var discord_data = JSON.parse(discord_scrape);
     }
-    
+    else if (url.indexOf("Chewwy's Departure Lounge") > -1) {
+      var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Chewwy's-Departure-Lounge.json");
+      var discord_data = JSON.parse(discord_scrape);
+    }
     else {
       var discord_scrape = loadFile("https://raw.githubusercontent.com/Tarasa24/discord-analytics/master/data/discord-scrape_Crew-Humorníků.json");
       var discord_data = JSON.parse(discord_scrape);
@@ -229,9 +266,9 @@
           label:'Users',
           data:messages_per_user,
           //backgroundColor:'green',
-          backgroundColor:generate_color_list(Names),
-          borderWidth:1,
-          borderColor:'#777',
+          backgroundColor:generate_rainbow(Names.length),
+          borderWidth:0.2,
+          borderColor:'white',
           hoverBorderWidth:3,
           hoverBorderColor:'#ffffff'
         }]
@@ -273,8 +310,8 @@
           data:messages_per_channel,
           //backgroundColor:'green',
           backgroundColor:generate_color_list(Channels),
-          borderWidth:1,
-          borderColor:'#777',
+          borderWidth:0.5,
+          borderColor:'white',
           hoverBorderWidth:3,
           hoverBorderColor:'#ffffff'
         }]
@@ -306,21 +343,31 @@
       }
     });
 
+    var line_color = random_rgba(1)
+
     let historicCHART = new Chart(myChart3, {
-      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data:{
         labels:Dates,
         datasets:[{
           label:'Number of messages',
           data:number_of_messages_per_day,
-          backgroundColor:generate_one_color_list(Dates, "green"),    
-          borderWidth:0,
-          borderColor:'#777',
-          hoverBorderWidth:3,
-          hoverBorderColor:'#ffffff'
+          backgroundColor: line_color,
+          borderWidth: 2,
+          borderColor: "white",
+          hoverBorderWidth: 1,
+          hoverBorderColor:'#ffffff',
+          pointRadius: 2,
+          pointHitRadius: 8,
+          fill: false
         }]
       },
       options:{
+        elements: {
+            line: {
+                tension: 0.3, // disables bezier curves
+            }
+        },
         title:{
           display:false,
           text:'Messages per Day',
@@ -357,8 +404,8 @@
           data:messages_freq,
           //backgroundColor:'green',
           backgroundColor:generate_color_list(Words),
-          borderWidth:1,
-          borderColor:'#777',
+          borderWidth:0.5,
+          borderColor:'white',
           hoverBorderWidth:3,
           hoverBorderColor:'#ffffff'
         }]

@@ -1,9 +1,15 @@
 import json
 from pprint import pprint
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
+import sys
+from multiprocessing.pool import ThreadPool
+import time
 
-with open('dht.txt', encoding="utf8") as infile:
+start = time.time()
+
+print(sys.argv[-1])
+with open(sys.argv[-1], encoding="utf8") as infile:
     data = json.load(infile)
 
 # Inital dict making
@@ -56,14 +62,13 @@ def messages_per_user (userindexDict, channelsDict):
             for key in data["data"][channelIndex]:
                 messageList.append(key)
         except Exception as e:
-            print(e)
-        
-    
-        for messageIndex in messageList:     
-            for userID in userindexDict.keys():
-                if data["data"][channelIndex][messageIndex]["u"] == userindexDict.get(userID):
-                    current_number = messagesPerUserDict.get(userID)
-                    messagesPerUserDict.update({userID: current_number + 1})
+            pass
+                      
+    for messageIndex in messageList:     
+        for userID in userindexDict.keys():
+            if data["data"][channelIndex][messageIndex]["u"] == userindexDict.get(userID):
+                current_number = messagesPerUserDict.get(userID)
+                messagesPerUserDict.update({userID: current_number + 1})
 
 
     sorted_d = sorted(messagesPerUserDict.items(), key=lambda x: x[1])
@@ -75,8 +80,7 @@ def messages_per_user (userindexDict, channelsDict):
             key = sorted_d[x][0]
             value = sorted_d[x][1]
         except Exception as e:
-            print(e)
-        
+            pass
         finalDict.update({key: value})
 
     return finalDict
@@ -96,8 +100,8 @@ def messages_per_channel (channelsDict):
             name = channelsDict.get(channelID)
             messagesPerChannelDict.update({name: number_of_messages})
         except Exception as e:
-            print(e)
-    
+            pass
+
     sorted_d = sorted(messagesPerChannelDict.items(), key=lambda x: x[1])
     sorted_d.reverse()
 
@@ -107,8 +111,7 @@ def messages_per_channel (channelsDict):
             key = sorted_d[x][0]
             value = sorted_d[x][1]
         except Exception as e:
-            print(e)
-        
+            pass
         finalDict.update({key: value})
 
     return finalDict
@@ -139,8 +142,7 @@ def word_frequency (channelsDict):
                         else:
                            wordFreqDict.update({word: 1})
         except Exception as e:
-            print(e)
-        
+            pass
     
     sorted_d = sorted(wordFreqDict.items(), key=lambda x: x[1])
     sorted_d.reverse()
@@ -156,7 +158,6 @@ def word_frequency (channelsDict):
 
 
 def total_number_of_messages (channelsDict):
-    "{'2018-18-10': 3229}"
 
     total_number_of_messages_count = 0
     
@@ -180,9 +181,7 @@ def history(channelsDict):
             for key in data["data"][channelIndex]:
                 messageList.append(key)
         except Exception as e:
-            print(e)
-        
-
+            pass
         for messageIndex in messageList:     
             
             time = int(data["data"][channelIndex][messageIndex]["t"] / 1000)
@@ -193,23 +192,42 @@ def history(channelsDict):
             else:
                 daysDict.update({time_formated: 1})
 
+    List = list(daysDict.keys())
+    start = datetime.strptime(List[0], "%Y-%m-%d")
+    end = datetime.strptime(List[-1], "%Y-%m-%d")
+    date_generated = [start + timedelta(days=x,) for x in range(0, (end-start).days)]
+
+    for date in date_generated:
+        if date.strftime("%Y-%m-%d") not in daysDict:
+            daysDict.update({date.strftime("%Y-%m-%d"): 0})
+
+
     sorted_d = sorted(daysDict.items(), key=lambda x: x[0])
-
-
     finalDict = {}
     for x in range(len(sorted_d)):
         key = sorted_d[x][0]
         value = sorted_d[x][1]
 
-        finalDict.update({key: value}) 
+        finalDict.update({key: value})
 
     return finalDict
 
 
-def first_message(channelsDict):
-    List = list(history(channelsDict).keys())
+def first_message(history):
+    List = list(history.keys())
     return List[0]
 
+# multi threading
+pool = ThreadPool()
+
+messages_per_user_res = pool.apply_async(messages_per_user, (userindexDict, channelsDict,))
+time.sleep(5/1000)
+messages_per_channel_res = pool.apply_async(messages_per_channel, (channelsDict,))
+time.sleep(5/1000)
+word_frequency_res = pool.apply_async(word_frequency, (channelsDict,))
+time.sleep(5/1000)
+history_res = pool.apply_async(history, (channelsDict,))
+time.sleep(5/1000)
 
 # json making
 with open("../data/discord-scrape_" + server_name().replace(" ", "-") + ".json", "w") as outfile:
@@ -218,14 +236,17 @@ with open("../data/discord-scrape_" + server_name().replace(" ", "-") + ".json",
     "number_of_messages": total_number_of_messages(channelsDict),
     "number_of_users": number_of_users(userindexDict),
     "number_of_channels": number_of_channels(channelsDict),
-    "first_message": first_message(channelsDict),
+    "first_message": first_message(history_res.get()),
     "last_update": datetime.now().strftime("%Y-%m-%d %H:%M")},
     "data": 
-    {"messages_per_user": messages_per_user(userindexDict, channelsDict), 
-    "messages_per_channel": messages_per_channel(channelsDict),
-    "word_frequency": word_frequency(channelsDict),
-    "historical_data": history(channelsDict)}}
+    {"messages_per_user": messages_per_user_res.get(), 
+    "messages_per_channel": messages_per_channel_res.get(),
+    "word_frequency": word_frequency_res.get(),
+    "historical_data": history_res.get()}
+    }
     json.dump(finaljson, outfile) 
 
-print("Json files have been successfully created/updated")
+
+end = time.time()
+print("Json files have been successfully created/updated in {} s".format(end - start))
 
