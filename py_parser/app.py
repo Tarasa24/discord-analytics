@@ -6,6 +6,7 @@ import sys
 from multiprocessing.pool import ThreadPool
 import time
 
+
 start = time.time()
 
 print(sys.argv[-1])
@@ -165,7 +166,7 @@ def total_number_of_messages (channelsDict):
             for key in data["data"][channelIndex]:
                 total_number_of_messages_count += 1
         except Exception as e:
-            print(e)
+            pass
         
 
     return total_number_of_messages_count
@@ -213,9 +214,36 @@ def history(channelsDict):
     return finalDict
 
 
-def first_message(history):
+def first_and_last_message(history):
     List = list(history.keys())
-    return List[0]
+    return (List[0], List[-1])
+
+
+def messages_per_hour (channelsDict):
+    perHourDict = {}
+
+    for x in range(24):
+        if x < 10:
+            perHourDict.update({"0" + str(x) + ":00": 0})
+        else:
+            perHourDict.update({str(x) + ":00": 0})
+
+    for channelIndex in channelsDict.keys():
+        messageList = []
+        try:
+            for key in data["data"][channelIndex]:
+                messageList.append(key)
+        except Exception as e:
+            pass
+        for messageIndex in messageList:     
+            
+            time = int(data["data"][channelIndex][messageIndex]["t"] / 1000)
+            time_formated = datetime.utcfromtimestamp(time).strftime('%H')
+
+            i = int(perHourDict.get(time_formated + ":00")) + 1
+            perHourDict.update({time_formated + ":00": i})
+
+    return perHourDict
 
 # multi threading
 pool = ThreadPool()
@@ -228,6 +256,8 @@ word_frequency_res = pool.apply_async(word_frequency, (channelsDict,))
 time.sleep(5/1000)
 history_res = pool.apply_async(history, (channelsDict,))
 time.sleep(5/1000)
+messages_per_hour_res = pool.apply_async(messages_per_hour, (channelsDict,))
+time.sleep(5/1000)
 
 # json making
 with open("../data/discord-scrape_" + server_name().replace(" ", "-") + ".json", "w") as outfile:
@@ -236,13 +266,15 @@ with open("../data/discord-scrape_" + server_name().replace(" ", "-") + ".json",
     "number_of_messages": total_number_of_messages(channelsDict),
     "number_of_users": number_of_users(userindexDict),
     "number_of_channels": number_of_channels(channelsDict),
-    "first_message": first_message(history_res.get()),
+    "first_message": first_and_last_message(history_res.get())[0],
+    "last_message": first_and_last_message(history_res.get())[-1],
     "last_update": datetime.now().strftime("%Y-%m-%d %H:%M")},
     "data": 
     {"messages_per_user": messages_per_user_res.get(), 
     "messages_per_channel": messages_per_channel_res.get(),
     "word_frequency": word_frequency_res.get(),
-    "historical_data": history_res.get()}
+    "historical_data": history_res.get(),
+    "messages_per_hour": messages_per_hour_res.get()}
     }
     json.dump(finaljson, outfile) 
 
