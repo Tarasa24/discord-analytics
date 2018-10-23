@@ -1,0 +1,27 @@
+body {
+    background-color:#232b2b;
+}
+h2 {
+	color: white;
+}
+#tooltip {
+	text-decoration:none; 
+	color: #c7c7c7; 
+	border-bottom: 2px dotted #c7c7c7; 
+	cursor: pointer;
+}
+#github-button {
+	font-size:24px; 
+	margin-right: 5px
+}
+#reddit-button {
+	font-size:24px; 
+	background-color: #FF5700; 
+	margin-right: 5px
+}
+#link-button {
+	font-size:24px; 
+	background-color: gray; 
+	color: white; 
+	margin-right: 5px
+}
