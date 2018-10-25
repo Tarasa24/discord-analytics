@@ -148,8 +148,8 @@ for (var x in discord_data.data.number_of_mentions) {
 };
 var Pinged = Object.keys(discord_data.data.number_of_mentions);
 
-console.log(Hours)
-console.log(messages_per_hour)
+console.log(Pinged)
+console.log(mentions_per_user)
 
 // COLORS!
 function random_rgba() {

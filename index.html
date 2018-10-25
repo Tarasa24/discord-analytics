@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<<<<<<< HEAD
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1024">
@@ -87,82 +85,4 @@
 </body>
 <script src="https://cdn.staticaly.com/gh/Tarasa24/discord-analytics/master/js/charts.js"></script>
 <!--<script src="js/charts.js"></script>-->
-
-=======
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=1024">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-      <link rel="stylesheet" type="text/css" href="https://cdn.staticaly.com/gh/Tarasa24/discord-analytics/master/css/styles.css">
-      <title>Discord Analytics</title>
-   </head>
-   <body>
-      <div class="container" align="center" style="padding-top: 20px; padding-bottom: 10px">
-         <h2><a href="https://tarasa24.github.io/discord-analytics/">Discord Analytics</a></h2>
-         <p style="color: white">For all of yours data-fetish needs...</p>
-         <table class="table table-dark" style="width: 50%" align="center">
-            <tr>
-               <td>
-                  <div class="form-group">
-                     <label for="sel1">Select server:</label>
-                     <select class="form-control" id="select" onchange="insertParam()">
-                     </select>
-                  </div>
-               </td>
-            </tr>
-         </table>
-         <table class="table table-dark" style="width: 50%" id="table"></table>
-      </div>
-      <script>
-         function insertParam()
-         {
-         key = encodeURI("s"); value = encodeURI($( "#select option:selected" ).text());
-         
-         var kvp = document.location.search.substr(1).split('&');
-         
-         var i=kvp.length; var x; while(i--) 
-         {
-             x = kvp[i].split('=');
-         
-             if (x[0]==key)
-             {
-                 x[1] = value;
-                 kvp[i] = x.join('=');
-                 break;
-             }
-         }
-         
-         if(i<0) {kvp[kvp.length] = [key,value].join('=');}
-         
-         //this will reload the page, it's likely better to store this until finished
-         document.location.search = kvp.join('&'); 
-         }
-      </script>
-      <div class="container" align="center" style="color: white">
-         <h3><a data-toggle="tooltip" title="First 50 users" id="tooltip">Messages per user</a></h3>
-         <canvas id="myChart"></canvas>
-         <h3><a data-toggle="tooltip" title="First 50 users" id="tooltip">Messages per Channel</a></h3>
-         <canvas id="myChart2"></canvas>
-         <h3>Messages per Day</h3>
-         <canvas id="myChart3"></canvas>
-         <h3><a data-toggle="tooltip" title="Do you see how inconsitent the sleep/wake schedule of those users is?" id="tooltip">Hourly rate o messages</a></h3>
-         <canvas id="myChart4"></canvas>
-         <h3>Word Frequency</h3>
-         <canvas id="myChart5"></canvas>
-      </div>
-      <div align="center" style="padding-top: 50px; padding-bottom: 5px">
-         <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"><button class="btn btn-primary" id="github-button">Github <i class="fa fa-github"></i></button></a>
-         <a href="https://www.reddit.com/r/discordapp/comments/7pk88f/an_analysis_of_760000_messages_from_the/" target="_blank"><button class="btn btn-danger" id="reddit-button">Reddit <i class="fa fa-reddit"></i></button></a>
-         <a href="https://dht.chylex.com/" target="_blank"><button id="link-button" class="btn">Discord History Tracker <i class="fa fa-external-link-square"></i></button></a>
-      </div>
-      <div align="center">
-         <b style="color: gray">Tarasa24 <i>2018</i></b>
-      </div>
-      <script src="https://cdn.staticaly.com/gh/Tarasa24/discord-analytics/master/js/charts.js"></script>
-   </body>
->>>>>>> 92905db92a28ed7e7069261cc18f13932a5196a3
 </html>
