@@ -456,7 +456,7 @@ let mentions_per_userCHART = new Chart(myChart6, {
             data: mentions_per_user,
             //backgroundColor:'green',
             backgroundColor: generate_rainbow(Pinged.length),
-            borderWidth: 0.5,
+            borderWidth: 0.2,
             borderColor: 'white',
             hoverBorderWidth: 3,
             hoverBorderColor: '#ffffff'
