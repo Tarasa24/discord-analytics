@@ -315,7 +315,7 @@ number_of_mentions_res = pool.apply_async(
 time.sleep(5/1000)
 
 # json making
-path = "../data/discord-scrape_" + server_name().replace(" ", "-") + ".json"
+path = "../data/discord-scrape_" + server_name().replace(" ", "-").replace("/", "_") + ".json"
 with open(path, "w") as outfile:
     finaljson = {"head":
                  {"server_name": server_name(),
