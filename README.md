@@ -1,7 +1,7 @@
 # Discord Analytics!
 
 Have you ever wanted to see who is the top chatter in your favourite Discord server? Or have you ever wondered, what are the most active hours? Or are you simply just a data-lover? *(ehm.. fetishist)*
-Then look no more! **Discord Analytics** i here for you to help.
+Then look no more! **Discord Analytics** is here for you to help.
 
 ## We need your help!
 
@@ -18,6 +18,6 @@ Alternatively just put whole file to https://pastebin.com/ and send it directly 
 
 ## Now on more serious note
 The concept itself is fairly simple. 
-We are using [generated scrape](Discord%20History%20Tracker), that is then parsed and anonymizated with our python script. And it is finally all represented with the help of [Chart.js](https://www.chartjs.org/) library.
+We are using [generated scrape](https://dht.chylex.com/), that is then parsed and anonymizated with our python script. And it is finally all represented with the help of [Chart.js](https://www.chartjs.org/) library.
 
 This project should really act like showing of interesting concept, rather than in-real-world-used web application. So please, bear that in mind.
