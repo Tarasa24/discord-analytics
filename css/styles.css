@@ -35,6 +35,10 @@ h2 {
     display: none;
 }
 
+#error_ {
+	display: none;
+}
+
 #preloader {
     position: fixed;
     top: 0;
