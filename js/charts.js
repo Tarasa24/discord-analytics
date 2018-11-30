@@ -16,7 +16,7 @@ var decodeHTML = function(html) {
 };
 
 function get_scrapelist() {
-    var filePath = 'https://allorigins.me/get?url=' + encodeURIComponent('https://github.com/Tarasa24/discord-analytics/tree/master/data')
+    var filePath = 'https://api.allorigins.ml/get?method=raw&url=' + encodeURIComponent('https://github.com/Tarasa24/discord-analytics/tree/master/data');
     var html = null;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("GET", filePath, false);
@@ -24,15 +24,14 @@ function get_scrapelist() {
     if (xmlhttp.status == 200) {
         html = xmlhttp.responseText;
     }
-    html = JSON.parse(html)
 
     scrapeList = []
     var index = 0
     while (true) {
         var correction = 'title=\\"discord-scrape_'.length - 1
-        index = html.contents.indexOf('title="discord-scrape_', index) + correction
-        var index2 = html.contents.indexOf('.json', index)
-        var result = decodeHTML(html.contents.substring(index, index2).split('-').join(' '));
+        index = html.indexOf('title="discord-scrape_', index) + correction
+        var index2 = html.indexOf('.json', index)
+        var result = decodeHTML(html.substring(index, index2).split('-').join(' '));
 
         if (scrapeList.indexOf(result) > -1) {
             break
