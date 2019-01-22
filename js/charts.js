@@ -28,8 +28,8 @@ function get_scrapelist() {
     scrapeList = []
     var index = 0
     while (true) {
-        var correction = 'title=\\"discord-scrape_'.length - 1
-        index = html.indexOf('title="discord-scrape_', index) + correction
+        var correction = 'title=\\"discord-scrape_'.length
+        index = html.indexOf('title=\\"discord-scrape_', index) + correction
         var index2 = html.indexOf('.json', index)
         var result = decodeHTML(html.substring(index, index2).split('-').join(' '));
 
