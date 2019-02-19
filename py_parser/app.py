@@ -37,7 +37,7 @@ word_message_ratio = round(int(total_word_count) / int(number_of_messages), 2)
 
 path_server_name = server_name.replace("/", "_").replace("\\", "_").replace(" ", "-")
 
-path = "../website/data/discord-scrape_" + path_server_name + ".json"
+path = "../webserver/discord-analytics-frontend/website/data/discord-scrape_" + path_server_name + ".json"
 with open(path, "w") as outfile:
     finaljson = {
         "head":
