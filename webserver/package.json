@@ -1,0 +1,26 @@
+{
+  "name": "discord-analytics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "start": "nf start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tarasa24/discord-analytics.git"
+  },
+  "author": "Tarasa24",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tarasa24/discord-analytics/issues"
+  },
+  "homepage": "https://github.com/Tarasa24/discord-analytics#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "discord.js": "^11.4.2",
+    "express": "^4.16.4",
+    "foreman": "^3.0.1",
+    "morgan": "^1.9.1"
+  }
+}

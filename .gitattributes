@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+Chart.min.js export-ignore
+jquery.min.js export-ignore
+bootstrap.min.css export-ignore
