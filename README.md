@@ -39,7 +39,7 @@ ___
 	
 ## Technologies
 Project is created with:
-* <a href="https://dht.chylex.com/" target="_blank">Discord History Tracker</a>
+* <a href="https://github.com/chylex/Discord-History-Tracker" target="_blank">Discord History Tracker</a>
 * <a href="https://github.com/chartjs/Chart.js" target="_blank">chart.js</a>
 * <a href="https://github.com/discordjs/discord.js" target="_blank">discord.js</a>
 * <a href="https://github.com/expressjs/express" target="_blank">express</a>
