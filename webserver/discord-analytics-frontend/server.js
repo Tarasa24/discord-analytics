@@ -25,7 +25,9 @@ app.get('/data/list', function(req, res) {
   var file_list = []
 
   fs.readdirSync(folder).forEach(file => {
-    file_list.push(file)
+    if (file.includes(".json")){
+      file_list.push(file)
+    }
   });
 
   res.send(file_list)

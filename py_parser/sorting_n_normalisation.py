@@ -44,3 +44,8 @@ def history_sort(daysDict):
         finalDict.update({key: value})
 
     return finalDict
+
+def image_sort(images):
+    sor = sorted(images, key=lambda x: x[0])
+    sor.reverse()
+    return sor

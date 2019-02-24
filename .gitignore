@@ -1,4 +1,5 @@
 py_parser/dht/_
+py_parser/custom configs
 __pycache__
 node_modules
 *.log

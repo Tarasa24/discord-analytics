@@ -13,7 +13,7 @@ def if_not_in(element, per_dict, n=1):
     return per_dict
 
 
-def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
+def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
     # init dicts
     messages_per_channel = {}
     total_message_count = 0
@@ -24,6 +24,7 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
     total_word_count = 0
     mentions_count = {}
     word_frequency = {}
+    emotes_frequency = {}
 
     # hour prep
     for x in range(24):
@@ -35,14 +36,27 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
     # users prep
     user.create(UserIndexDict, nicknameDict)
 
+    #ignored prep
+    ignored_nicknames = []
+    for i in config["ignored"]["ignored-users"]:
+        ignored_nicknames.append(nicknameDict.get(str(i)))
+
     # looping
     for channel in data:
+        if int(channel) in config["ignored"]["ignored-channels"]:
+            continue
         for message in data[channel]:
+
             messages_per_channel = if_not_in(channel, messages_per_channel)
             total_message_count += 1
 
             # Read "u"
             u = data[channel][message]["u"]
+
+            #ignore            
+            if UserIndexDict.get(u) in ignored_nicknames:
+                continue
+
             messages_per_user = if_not_in(u, messages_per_user)
 
             # Read "t"
@@ -66,8 +80,11 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
             # word frequency
             for word in words:
                 word = word.lower()
-                if len(word) >= 4:
-                    word_frequency = if_not_in(word, word_frequency)
+                if len(word) >= 4 and word[:2] != "<@":
+                    if word[:2] == "<:" and word[-1] == ">":
+                        emotes_frequency = if_not_in(word, emotes_frequency)
+                    else:
+                        word_frequency = if_not_in(re.sub(r'[^\w]', '', word), word_frequency)
             # mentions
             if "@everyone" in content:
                 mentions_count = if_not_in("@everyone", mentions_count)
@@ -78,6 +95,12 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
                         mentions_count = if_not_in(nick, mentions_count)
                         user.mentioned(list(UserIndexDict.values()).index(
                             str(nicknameDict.get(mention))))
+
+            # Read "a"
+            if "a" in data[channel][message].keys():
+                files = data[channel][message]["a"]
+                for f in files:
+                    user.images(u, int(data[channel][message]["t"]), f["url"])
 
             # user class
             user.mostActiveChannel(u, channel)
@@ -96,15 +119,17 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
 
     # Sorting
     history = history_sort(history)
-    messages_per_channel = order_sort(messages_per_channel, 500)
-    messages_per_user = order_sort(messages_per_user, 500)
-    words_per_user = order_sort(words_per_user, 500)
-    mentions_count = order_sort(mentions_count, 500)
-    word_frequency = order_sort(word_frequency, 500)
+    messages_per_channel = order_sort(messages_per_channel, 50)
+    messages_per_user = order_sort(messages_per_user, 50)
+    words_per_user = order_sort(words_per_user, 50)
+    mentions_count = order_sort(mentions_count, 50)
+    word_frequency = order_sort(word_frequency, 50)
+    emotes_frequency = order_sort(emotes_frequency, 10)
 
     # Users finalisation
     users = {}
     for i in UserIndexDict.keys():
-        users.update({UserIndexDict.get(i): user.show(i, channelsDict)})
+        if UserIndexDict.get(i) not in ignored_nicknames:
+            users.update({UserIndexDict.get(i): user.show(i, channelsDict, config)})
 
-    return (total_message_count, total_word_count, messages_per_channel, messages_per_user, words_per_user, mentions_count, history, perHourDict, word_frequency, users)
+    return (total_message_count, total_word_count, messages_per_channel, messages_per_user, words_per_user, mentions_count, history, perHourDict, word_frequency, users, emotes_frequency)

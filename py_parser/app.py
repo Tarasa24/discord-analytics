@@ -8,12 +8,20 @@ from messages_pool import get_messages_pool
 start = time.time()
 
 # Reading file given in last argument
-print(sys.argv[-1])
-with open(sys.argv[-1], encoding="utf8") as infile:
+print(sys.argv[1])
+with open(sys.argv[1], encoding="utf8") as infile:
     data = json.load(infile)
 
+config_path = "config.conf"
+if len(sys.argv) > 2:
+    if sys.argv[2] == "-config" or sys.argv[2] == "-c":
+        config_path = sys.argv[3]
+
+print(config_path)
+with open(config_path) as infile:
+    config = json.load(infile)
 # Data unwrapping
-initial_pool = get_initial_pool(data["meta"])
+initial_pool = get_initial_pool(data["meta"], config)
 nicknameDict = initial_pool[0]
 userIndexDict = initial_pool[1]
 number_of_users = initial_pool[2]
@@ -21,7 +29,7 @@ server_name = initial_pool[3]
 channelsDict = initial_pool[4]
 number_of_channels = initial_pool[5]
 
-messages_pool = get_messages_pool(data["data"], nicknameDict, userIndexDict, channelsDict)
+messages_pool = get_messages_pool(data["data"], nicknameDict, userIndexDict, channelsDict, config)
 number_of_messages = messages_pool[0]
 total_word_count = messages_pool[1]
 messages_per_channel = messages_pool[2]
@@ -32,8 +40,9 @@ history = messages_pool[6]
 perHourDict = messages_pool[7]
 word_frequency = messages_pool[8]
 users = messages_pool[9]
+emotes_frequency = messages_pool[10]
 
-word_message_ratio = round(int(total_word_count) / int(number_of_messages), 2)
+word_message_ratio = round(total_word_count / number_of_messages, 2)
 
 path_server_name = server_name.replace("/", "_").replace("\\", "_").replace(" ", "-")
 
@@ -62,7 +71,7 @@ with open(path, "w") as outfile:
                     "number_of_mentions": mentions_count
                 },
         "users": users,
-        "help": nicknameDict
+        "test": emotes_frequency
     }
     json.dump(finaljson, outfile)
 

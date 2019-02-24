@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
-from sorting_n_normalisation import order_sort, normalise
+from sorting_n_normalisation import order_sort, normalise, image_sort
+import os.path
 
 
 # Handy helper function
@@ -34,23 +35,28 @@ class User():
         self.wordsCount = 0
         self.mostUsedWord = {}
         self.mentioned = 0
+        self.images = []
 
-    def serialize(self, channelsDict):
+    def serialize(self, channelsDict, config):
         self.mostActiveChannel = normalise(
             channelsDict, self.mostActiveChannel)
-
+        
         final = {
             "id": self.id,
             "firstMessage": datetime.utcfromtimestamp(self.firstMessage).strftime('%Y-%m-%d %H:%M:%S UTC'),
             "lastMessage": datetime.utcfromtimestamp(self.lastMessage).strftime('%Y-%m-%d %H:%M:%S UTC'),
-            "messagesCount": self.messagesCount - 1,
+            "messagesCount": self.messagesCount,
             "wordsCount": self.wordsCount,
+            "imagesCount": len(self.images),
             "words_per_message_ratio": round(self.wordsCount/self.messagesCount, 2),
             "mostActiveChannel": order_sort(self.mostActiveChannel, 1),
             "mostUsedWord": order_sort(self.mostUsedWord, 3),
             "mentioned": self.mentioned,
-            "history": order_sort(self.history, 1)
+            "history": order_sort(self.history, 1),
+            "images": image_sort(self.images)
         }
+        if config["features"]["images"] == False:
+            final.update({"images": [[0, "/media/unavalible.png"]]})
         return final
 
 
@@ -113,6 +119,21 @@ def mentioned(u):
     user.mentioned += 1
 
 
-def show(u, channelsDict):
+def images(u, time, link):
     user = usersDict.get(u)
-    return user.serialize(channelsDict)
+
+    def is_file_image(filename):
+        image_formats = (".png", ".jpeg", ".jpg", ".gif", ".svg")
+        extension = os.path.splitext(filename)[1]
+        
+        if extension in image_formats:
+            return True
+        return False
+
+    if is_file_image(link):
+        user.images.append((time, link))
+
+
+def show(u, channelsDict, config):
+    user = usersDict.get(u)
+    return user.serialize(channelsDict, config)
