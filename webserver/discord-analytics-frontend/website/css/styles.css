@@ -335,3 +335,10 @@ h2 {
     opacity: 0.5;
     background-color: black;
 }
+
+#progress {
+    font-size: 15px;
+    color: gray;
+    position: relative;
+    top: 65%;
+}

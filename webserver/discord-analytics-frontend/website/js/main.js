@@ -38,7 +38,7 @@ var discord_data = ""
 //If not, it will load alphabetically first one in the array of all .json files
 if (index == -1) {
     for (var i = 0; i < scrapeList.length; i++) {
-        select.innerHTML += "<option>" + decodeURI(scrapeList[i]) + "</option>"
+        select.insertAdjacentHTML("beforeend", "<option>" + decodeURI(scrapeList[i]) + "</option>")
     }
 
     var discord_scrape = loadFile("/data/" + scrapeList[0]);
@@ -48,7 +48,7 @@ if (index == -1) {
     document.title = 'Discord Analytics - ' + SelectItem;
     for (var i = 0; i < scrapeList.length; i++) {
         if (SelectItem != scrapeList[i]) {
-            select.innerHTML += "<option>" + decodeURI(scrapeList[i]) + "</option>"
+            select.insertAdjacentHTML("beforeend", "<option>" + decodeURI(scrapeList[i]) + "</option>")
         }
     }
 
@@ -157,7 +157,7 @@ console.log(mentions_per_user)
 var select = document.getElementById("myDropdown")
 console.log(Object.keys(discord_data.users))
 Object.keys(discord_data.users).forEach(function (name) {
-    select.innerHTML += `<a onclick="reloadName(this.innerHTML)">` + name + "</a>"
+    select.insertAdjacentHTML("beforeend", `<a onclick="reloadName(this.innerHTML)">` + name + "</a>")
 })
 
 //Inital name table construct
@@ -212,7 +212,7 @@ function user_tables_construct(api_response) {
                 for (var i = 0; i < load_ammount; i++) {
                     try {
                         const index = shift + i
-                        images_table.innerHTML += `<img data-toggle="tooltip" title="${new Date(images_queue[index][0]).toISOString().slice(0, 19).replace('T', ' ') + " UTC"}" class="pop-over lozad" data-src="${images_queue[index][1]}"/>`
+                        images_table.insertAdjacentHTML("beforeend", `<img data-toggle="tooltip" title="${new Date(images_queue[index][0]).toISOString().slice(0, 19).replace('T', ' ') + " UTC"}" class="pop-over lozad" data-src="${images_queue[index][1]}"/>`)
                     } catch (error) {
                         break
                     }

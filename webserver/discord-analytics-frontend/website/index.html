@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=1024">
     <link rel="icon" type="image/png" href="/media/DA_logo.png">
     <script src="/js/Chart.min.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/searchbox.js"></script>
@@ -17,6 +18,7 @@
 
 <body>
     <div id="preloader">
+        <p align="center" id="progress">Excuse longer loading time (it is literally loading informtion about all members)<br>Circles spinning, means that it hasn´t broken yet</p>
         <div id="loader"></div>
     </div>
 
@@ -30,14 +32,14 @@
 
         <div class="buttons" align="center">
             <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"><button class="btn btn-primary" id="github-button">Github
-                <i class="fab fa-github"></i></button></a>
-            <a href="https://dht.chylex.com/" target="_blank"><button id="link-button" class="btn">DHT 
-                <i class="fas fa-external-link-square-alt"></i></button></a>
+                    <i class="fab fa-github"></i></button></a>
+            <a href="https://dht.chylex.com/" target="_blank"><button id="link-button" class="btn">DHT
+                    <i class="fas fa-external-link-square-alt"></i></button></a>
             <br>
             <b style="color: gray">Tarasa24 2019</b>
         </div>
         <div id="image_count"></div>
-        <div align="center"  id="images_table"></div>
+        <div align="center" id="images_table"></div>
     </div>
 
     <div align="center" id="main_body" style="display: none">
