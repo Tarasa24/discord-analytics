@@ -37,7 +37,7 @@ class User():
         self.mentioned = 0
         self.images = []
 
-    def serialize(self, channelsDict, config):
+    def serialize(self, channelsDict):
         self.mostActiveChannel = normalise(
             channelsDict, self.mostActiveChannel)
         
@@ -55,8 +55,6 @@ class User():
             "history": order_sort(self.history, 1),
             "images": image_sort(self.images)
         }
-        if config["features"]["images"] == False:
-            final.update({"images": [[0, "/media/unavalible.png"]]})
         return final
 
 
@@ -134,6 +132,6 @@ def images(u, time, link):
         user.images.append((time, link))
 
 
-def show(u, channelsDict, config):
+def show(u, channelsDict):
     user = usersDict.get(u)
-    return user.serialize(channelsDict, config)
+    return user.serialize(channelsDict)
