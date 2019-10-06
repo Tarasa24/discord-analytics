@@ -196,7 +196,7 @@ function user_tables_construct() {
     mostUsedWord = [[undefined, NaN], [undefined, NaN], [undefined, NaN]];
   }
 
-  table_avatar.innerHTML = `<tr><th align="left"><img id="avatar" src="/media/not_avalible.svg"></th><td>
+  table_avatar.innerHTML = `<tr><th align="left"><img id="avatar" src="./media/not_avalible.svg"></th><td>
   <b>${selected_user}</b>
   <br style="line-height: 35px;">Not avalible in static version
   <br>Not avalible in static version</td></tr>`;
