@@ -60,7 +60,12 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
             perHourDict.update({time_formated_hour + ":00": i})
 
             # Read "m"
-            content = data[channel][message]["m"]
+            content = None
+            try:
+                content = data[channel][message]["m"]
+            except KeyError:
+                content = ""
+            
             # words_per_user
             words = content.split(" ")
             words_per_user = if_not_in(u, words_per_user, len(words))
