@@ -12,16 +12,8 @@ print(sys.argv[1])
 with open(sys.argv[1], encoding="utf8") as infile:
     data = json.load(infile)
 
-config_path = "config.conf"
-if len(sys.argv) > 2:
-    if sys.argv[2] == "-config" or sys.argv[2] == "-c":
-        config_path = sys.argv[3]
-
-print(config_path)
-with open(config_path) as infile:
-    config = json.load(infile)
 # Data unwrapping
-initial_pool = get_initial_pool(data["meta"], config)
+initial_pool = get_initial_pool(data["meta"])
 nicknameDict = initial_pool[0]
 userIndexDict = initial_pool[1]
 number_of_users = initial_pool[2]
@@ -29,7 +21,7 @@ server_name = initial_pool[3]
 channelsDict = initial_pool[4]
 number_of_channels = initial_pool[5]
 
-messages_pool = get_messages_pool(data["data"], nicknameDict, userIndexDict, channelsDict, config)
+messages_pool = get_messages_pool(data["data"], nicknameDict, userIndexDict, channelsDict)
 number_of_messages = messages_pool[0]
 total_word_count = messages_pool[1]
 messages_per_channel = messages_pool[2]
@@ -46,7 +38,7 @@ word_message_ratio = round(total_word_count / number_of_messages, 2)
 
 path_server_name = server_name.replace("/", "_").replace("\\", "_").replace(" ", "-")
 
-path = "../webserver/discord-analytics-frontend/website/data/discord-scrape_" + path_server_name + ".json"
+path = "./output" + path_server_name + ".json"
 with open(path, "w") as outfile:
     finaljson = {
         "head":

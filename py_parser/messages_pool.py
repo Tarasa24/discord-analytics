@@ -13,7 +13,7 @@ def if_not_in(element, per_dict, n=1):
     return per_dict
 
 
-def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
+def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict):
     # init dicts
     messages_per_channel = {}
     total_message_count = 0
@@ -36,15 +36,8 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
     # users prep
     user.create(UserIndexDict, nicknameDict)
 
-    #ignored prep
-    ignored_nicknames = []
-    for i in config["ignored"]["ignored-users"]:
-        ignored_nicknames.append(nicknameDict.get(str(i)))
-
     # looping
     for channel in data:
-        if int(channel) in config["ignored"]["ignored-channels"]:
-            continue
         for message in data[channel]:
 
             messages_per_channel = if_not_in(channel, messages_per_channel)
@@ -52,10 +45,6 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
 
             # Read "u"
             u = data[channel][message]["u"]
-
-            #ignore            
-            if UserIndexDict.get(u) in ignored_nicknames:
-                continue
 
             messages_per_user = if_not_in(u, messages_per_user)
 
@@ -71,7 +60,12 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
             perHourDict.update({time_formated_hour + ":00": i})
 
             # Read "m"
-            content = data[channel][message]["m"]
+            content = None
+            try:
+                content = data[channel][message]["m"]
+            except KeyError:
+                content = ""
+            
             # words_per_user
             words = content.split(" ")
             words_per_user = if_not_in(u, words_per_user, len(words))
@@ -129,7 +123,6 @@ def get_messages_pool(data, nicknameDict, UserIndexDict, channelsDict, config):
     # Users finalisation
     users = {}
     for i in UserIndexDict.keys():
-        if UserIndexDict.get(i) not in ignored_nicknames:
-            users.update({UserIndexDict.get(i): user.show(i, channelsDict, config)})
+        users.update({UserIndexDict.get(i): user.show(i, channelsDict)})
 
     return (total_message_count, total_word_count, messages_per_channel, messages_per_user, words_per_user, mentions_count, history, perHourDict, word_frequency, users, emotes_frequency)

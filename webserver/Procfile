@@ -1,2 +1,0 @@
-backend: node ./discord-analytics-backend/server.js
-frontend: node ./discord-analytics-frontend/server.js

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1024" />
+    <link rel="icon" type="image/png" href="./media/DA_logo.png" />
+    <script src="./js/Chart.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/searchbox.js"></script>
+    <script src="./js/parameters.js"></script>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Discord Analytics</title>
+  </head>
+
+  <body>
+    <div id="preloader">
+      <p align="center" id="progress">
+        Excuse longer loading time (it is literally loading informtion about all
+        members)<br />Circles spinning, means that it hasn´t broken yet
+      </p>
+      <div id="loader"></div>
+    </div>
+
+    <div id="sidenav" class="sidenav" style="display: none">
+      <div class="dropdown">
+        <input
+          type="text"
+          placeholder="Search.."
+          id="myInput"
+          onkeyup="filterFunction()"
+          onfocus="showDropdown()"
+        />
+        <div id="myDropdown" class="dropdown-content"></div>
+      </div>
+      <table
+        align="center"
+        class="table table-dark"
+        style="width: 95%"
+        id="table_avatar"
+      ></table>
+      <table
+        align="center"
+        class="table table-dark"
+        style="width: 95%"
+        id="table_name"
+      ></table>
+
+      <div class="buttons" align="center">
+        <a href="https://github.com/Tarasa24/discord-analytics" target="_blank"
+          ><button class="btn btn-primary" id="github-button">
+            Github <i class="fab fa-github"></i></button
+        ></a>
+        <a href="https://dht.chylex.com/" target="_blank"
+          ><button id="link-button" class="btn">
+            DHT <i class="fas fa-external-link-square-alt"></i></button
+        ></a>
+        <br />
+        <b style="color: gray">Tarasa24 2019</b>
+      </div>
+      <div id="image_count"></div>
+      <div align="center" id="images_table"></div>
+    </div>
+
+    <div align="center" id="main_body" style="display: none">
+      <div
+        class="container"
+        align="center"
+        style="padding-top: 20px; padding-bottom: 10px"
+      >
+        <h2><a href="/">Discord Analytics</a></h2>
+        <p style="color: white">For all of yours data-fetish needs...</p>
+        <table
+          id="form-group"
+          class="table table-dark"
+          style="width: 50%"
+          align="center"
+        >
+          <tr>
+            <td>
+              <div class="form-group">
+                <label for="sel1">Select server:</label></br>
+                <select
+                  style="margin-bottom: -2.5%"
+                  class="form-control"
+                  id="select"
+                  onchange="insertParam(`s`,$(`#select option:selected`).text()), true"
+                >
+                </select>
+              </div>
+            </td>
+            <td style="vertical-align : middle;">
+              <button class="btn" style="margin-top: 52.5%" data-toggle="tooltip" title="Upload" onclick="alert('Not avalible in static version')">
+                  <a class="fas fa-upload"></a>
+              </button>
+            </td>
+          </tr>
+        </table>
+
+        <table class="table table-dark" style="width: 50%" id="table"></table>
+      </div>
+
+      <div class="container" align="center" style="color: white">
+        <h3>
+          <a
+            data-toggle="tooltip"
+            title="First 50 most active users (messages wise)"
+            id="tooltip"
+            >Messages per user</a
+          >
+        </h3>
+        <canvas id="myChart" height="250%"></canvas>
+        <h3>
+          <a
+            data-toggle="tooltip"
+            title="First 50 most active users (words wise)"
+            id="tooltip"
+            >Words per user</a
+          >
+        </h3>
+        <canvas id="myChart1" height="250%"></canvas>
+        <h3>
+          <a
+            data-toggle="tooltip"
+            title="First 50 most active channels"
+            id="tooltip"
+            >Messages per Channel</a
+          >
+        </h3>
+        <canvas id="myChart2" height="200%"></canvas>
+        <h3>Messages per Day</h3>
+        <canvas id="myChart3"></canvas>
+        <h3>
+          <a
+            data-toggle="tooltip"
+            title="Do you see how inconsitent the sleep/wake schedule of those users is?"
+            id="tooltip"
+            >Hourly rate of messages</a
+          >
+        </h3>
+        <canvas id="myChart4"></canvas>
+        <h3>Word Frequency</h3>
+        <canvas id="myChart5"></canvas>
+        <h3>
+          <a
+            data-toggle="tooltip"
+            title="Sooo, how many times did somebody spam @everone?"
+            id="tooltip"
+            >Mentions per user</a
+          >
+        </h3>
+        <canvas id="myChart6" height="250%"></canvas>
+      </div>
+    </div>
+  </body>
+  <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"
+  ></script>
+  <script src="./js/pop-over.js"></script>
+  <script src="./js/colours.js"></script>
+  <script src="./js/main.js"></script>
+</html>

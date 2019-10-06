@@ -1,7 +1,7 @@
 from multiprocessing.pool import ThreadPool
 
 
-def get_initial_pool(data, config):
+def get_initial_pool(data):
 
     def users_loop(data):
         def get_nicknameDict(keys):
@@ -56,10 +56,10 @@ def get_initial_pool(data, config):
     users_loop_tuple = req_users_loop.get()
 
     nicknameDict = users_loop_tuple[0]
-    number_of_users = users_loop_tuple[1] - len(config["ignored"]["ignored-users"])
+    number_of_users = users_loop_tuple[1]
     serverName = req_servers_loop.get()
     channelsDict = req_channels_loop.get()
-    number_of_channels = len(channelsDict) - len(config["ignored"]["ignored-channels"])
+    number_of_channels = len(channelsDict)
     userindexDict = userindex_loop(data["userindex"], nicknameDict)
 
     return (nicknameDict, userindexDict, number_of_users, serverName, channelsDict, number_of_channels)
