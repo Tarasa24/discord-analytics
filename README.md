@@ -64,4 +64,4 @@ When in doubt how to use mentioned tracker, head to the official website: <a hre
 
 [Live version](https://tarasa24.ddns.net): All features, limited uptime
 
-[Static version](https://tarasa24.ddns.net): Limited features, unlimited uptime
+[Static version](https://tarasa24.github.io/discord-analytics/): Limited features, unlimited uptime
