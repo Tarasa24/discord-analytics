@@ -45,7 +45,7 @@ if (index == -1) {
     );
   }
 
-  var discord_scrape = loadFile('/discord-analytics/data/' + scrapeList[0]);
+  var discord_scrape = loadFile('./data/' + scrapeList[0]);
   discord_data = JSON.parse(discord_scrape);
 } else {
   select.innerHTML = '<option>' + SelectItem + '</option>';
@@ -59,7 +59,7 @@ if (index == -1) {
     }
   }
 
-  var discord_scrape = loadFile('/discord-analytics/data/' + SelectItem);
+  var discord_scrape = loadFile('./data/' + SelectItem);
   discord_data = JSON.parse(discord_scrape);
 }
 
